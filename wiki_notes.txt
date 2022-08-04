@@ -1,0 +1,27 @@
+Process Documentation
+
+Goal: Extract text data for NLP model.
+	-Data should reflect standard english usage, avoiding bias if possible.
+	-Should get multiple data sets for different model types
+	
+Observations:
+	-54GB after precleaning, 955,584,637 lines
+	-Wikipedia has an excessive amount of soccer/football articles. Nearly 12% of the articles are football or football related.
+	-Wikipedia is over 50% sources and citations; by disk usage.
+		-Extract links for a URL -> vector model?
+	-Restart 1: Wikipedia has a massive amount of editor comments. These must be sorted out to avoid to avoid a biased data set.
+	-Wikipedia has a significant amount of files and descriptions about them. 
+		-Descriptions will be useful for classification. Should extract.
+	-Custom delimiters and tags help immensely.
+		-A hierarchy helps prevent delimiters from wiping each other improperly
+	-Deliminters should include higher level delimiters in exclusion list
+	-Some tags contain information but most are for wikipedia formatting and useless
+	-Math / Code / Chemistry sections are bad for parsing
+	-Remove all instances of delimiters before parsing with said delimiters
+	-Usually takes multiple passes to remove target elements due to nesting
+	-When matching groups, verify that patterns cover all cases of those cases before parsing
+		Ex: Identifying all html ref tags
+			grep -Eo "<[^<>]*ref[^<>]*>" file | grep -Ev "<\/ref>" | grep -Ev "<ref>" | grep -Ev "<ref\/>" | grep -Ev '<ref name="[^"]*">'
+	-Read formatting documentation BEFORE starting
+	-To check surrounding lines, remove confirmed matches before searching the corpus
+		grep -Ev "(confirmed match|confirmed match2)" | grep -Ev -C10 "questionable match"

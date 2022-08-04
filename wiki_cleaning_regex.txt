@@ -1,0 +1,747 @@
+s/ *… */ /g
+s/e\.g\.|\.i\.e\.|et\. al\.//g
+s/ph\.?d\./phd/Ig
+s/psy\.d\./psyd/Ig
+s/ll\.([dbm])\./ll$1/g
+s/ed\.d\./edd/g
+s/uss\.r\./ussr/g
+s/usm\.c\./usmc/g
+s/ (ss\.cc|indet|esp|eq|cf||bc|ad|figs?)\./ /g
+s/((?<=[" ,;:])|^)(\w+)[.?!]([,;])\s++(?=([a-z]\S*[ ,]|$))/$1$2 /g
+s/\.\.+/;/g
+s/(?<=[ £[:punct:]])([0-9]{1,3}), (?=[0-9]{3}[ [:punct:]–])/$1,/g
+s/([A-Z][a-zA-Z']*( [A-Z][a-zA-Z']*){2,})[?\!]+/\1/g
+
+
+grep -P '(?:[0-9]+([–-][0-9]+)?[,.; ]+|[A-Z]\w*[,.; ]+)+[A-Z]\w+\. (?:[,.; ]*([xclivXCLIV]+|[0-9]+([–-][0-9]+|[a-z])?)(?=[[:punct:] ]|$))+(,? (and|&) [0-9]+)?'
+
+(^|(?<=[\/,;:'\"’” ]| ))
+((?=[.',;:\"’”]* )|$)
+
+
+while (<$inp>) {
+    $_ =~ s/[^{} |<>\"’”']+(\.[^{} |<>\"’”']+)*\.(com?|info|org|net|gov|edu|i[oent]|m[ed]|p[lhk]|l[yv]|a[iu]|s[ek]|e[us]|b[re]|r[uo]|n[ouzg]|d[ike]|c[zhna]|u[sak]|tv|jp|hu|gr|fi|kz|za)([.\/][^{} |<>\"’”']+)?'?s?($|(?=[.\/,;:'\"’” ]))/ /ig;
+    $_ =~ s/(Mrs|Mr|Ms|St|Dr|Jr|Rev|Prof|Gen|Ltd|Govt|Bros|Lt|Inc)\.(?=[\p{L}0-9])/$1 /g;
+    $_ =~ s/(n\.w\.a|ver\.di|run-d\.m\.c\.|(prosieben)?sat\.1|node\.js|apl\.de\.ap|bit\.trip|media\.vision|india\.arie|will\.i\.am)'?s?/ /ig;
+    $_ =~ s/(^|(?<=[\/,;:'\"’” ]))(alt|yandex)(\.[^{} \`|<>\"’”']+)+(?=[.\/,;:'\"’” ]|$)([.\/][^{} \`|<>\"’”']+)?'?s?/ /ig;
+    $_ =~ s/\.(A(l(though|so|l)|fter|s|nd?|t|ccording|mong)|B(oth|ut|y|efore)|Currently|D(eath|u(e|ring))|E(ach|very)|F(o(r|llowing)|rom)|H(er|is|owever|ave)|I([snf]|t('?s)?)|L(ife|ater)|M(ost|any|ore)|N(ew|ow)s?|O(ne|ther|ver)|People|S(he|ince|o(me)?)|T(oday|h(o(ugh|se)|at|rough))|Th[eiau][nyirst]?[re]?|Under|W(h(ile|en)|ith|e)|You)((?=[.',;:\"’” ])|$)/ $1/g;
+    $_ =~ s/(^|(?<=[\/,;:'\"’” ]))[\/–-]?No\.(?:s? ?[0-9–-]+[a-zA-Z]?| ?[XVICLxvicl])(?:,? (and |to |of |& )?[0-9–-]+[a-zA-Z]?)*((?=[.',;:\"’”])|$)/ /g;
+    $_ =~ s/(^|(?<=[\/,;:'\"’” ]))[\/–-]?((DH|Re|M[SB]|PZL|CR|SR)\.(number )?[0-9]+[A-Z]*([.\/][A-Z0-9])?|Mk\.[XCLIVxcliv]+[a-z]?|Bus\.(\/US [0-9]+)?\/SR [0-9]+|[XIV]{2,}\.(\/|[0-9]+))'?s?((?=[.',;:\"’”])|$)/ /g;
+    $_ =~ s/\s*(,\s+)+/, /g;
+    $_ =~ s/\s*(;\s+)+/; /g;
+    $_ =~ s/\s*(\.\s+)+/. /g;
+    $_ =~ s/\s+/ /g;
+    print $oup "$_\n";
+}
+
+$_ =~ s/(^|(?<=[\/,;:'\"’” ]| ))[\/–-]?No\.(?:s? ?[0-9–-]+[a-zA-Z]?| ?[XVICLxvicl])(?:,? (and |to |of |& )?[0-9–-]+[a-zA-Z]?)*((?=[.',;:\"’”]* )|$)/ /g;
+$_ =~ s/(^|(?<=[\/,;:'\"’” ]| ))[\/–-]?((DH|Re|M[SB]|PZL|CR|SR)\.(number )?[0-9]+[A-Z]*([.\/][A-Z0-9])?|Mk\.[XCLIVxcliv]+[a-z]?|Bus\.(\/US [0-9]+)?\/SR [0-9]+|[XIV]{2,}\.(\/|[0-9]+))'?s?((?=[.',;:\"’”]* )|$)/ /g;
+
+
+s/ (Jr|Dr|Sr|Mrs?|Ms|Capt|Jnr|Snr|Col)\. / $1 /ig
+s/((?<=[" ,;:])|^)((?i)Inc|Co|Ltda?|Bros|Corp|LLC|Assoc|Dept|Bhd|Sdn|Cie|Bldg|Pop|III?|lbs?|ft|in|knt|km|hrs?|cm)\.[[:punct:]]?\s++(?=([a-z]\S*[ ,]|$))/ $1 /g;
+s/((?<=[" ,;:])|^)((?i)Tenn|Ky|Mo|Calif|Ct|Mass|Md|Conn|Pa|Ala|Ga|La|Minn|Mont|Colo|Tex|Mich|Ariz|Fla|Ind|Ill|Ark|Wash|Miss|USA|DC)\.[[:punct:]]?\s++(?=([a-z]\S*[ ,]|$))/ $1 /g;
+$_ =~ s/((?<=[" ,;:])|^)(Stat|Alt|Str?|Rd|Bl|Blvd|Moe|Ave|Plc|Ref|Bart|Bus|Bt)\.[[:punct:]]?(?![a-z])/ /ig;
+
+sed -E 's/([A-Z][a-zA-Z']*( [A-Z][a-zA-Z']*){2,})[?\!]+/\1/g'
+sed -E 's/[A-Z][a-z]+( [A-Z][a-z]+[?!]?){2,}//'
+
+
+
+
+if ($_ =~ /\|/) {
+$_ =~ s/⛀|⛂//g;
+$_ =~ s/^.*<\s*\/\s*comment\s*>//ig;
+$_ =~ s/ +([,.!?;]) +/$1 /g;
+$_ =~ s/<[^<>]*\/\s*>|ref( name\s*=\s*[^<>\/]*)\s*\/\s*>/ /ig;
+$_ =~ s/<\s*ref\s*[^<>]*>/⚟/ig;
+$_ =~ s/<\s*\/\s*ref\s*[^<>]*>/⚞/ig;
+$_ =~ s/(⚟|<\s*ref)[^⚟⚞]*(<\s*\/\s*ref([^<>]*>)?|⚞)/ /ig;
+$_ =~ s/\[\[([^☝])☝/ $1 /g;
+$_ =~ s/(\{\{|[☟⚟])[^|]*quote[^|]*\|/ /ig;
+$_ =~ s/(\{\{|\[\[|[☟⚟]|<\s*.?ref|ref\s*(name\s*=\s*[^<>]*)?>)[^☟☝⚟⚞]*(<\s*\/\s*ref|[⚞☝]|\}\}|\]\]|\/\s*ref\s*>)/ /ig;
+$_ =~ s/⚻[^⚺⚻]*⚺|⚟[^⚟⚞]*⚞|⚮[^⚮⚯]*⚯|⚬[^⚬⚭]*⚭|⚆[^⚆⚈]*⚈|☟[^☟☝]*☝|☛[^☛☚]*☚/ /g;
+$_ =~ s/(\s*,\s*)+/, /g;
+$_ =~ s/(\s*;\s*)+/; /g;
+$_ =~ s/\s+/ /g;
+if (length($_) < 32) {
+if ($_ =~ /^\s*[][{}<>\/`~–!*#%&☟☝☛☚⚟⚞⚆⚈=_+]|[][{}()<>\/`–*#☟☝☛☚⚟⚞⚆⚈=_+-]\s*$/) {
+if ($_ =~ /^As of the census of [0-9]{4}/) {
+if ($_ =~ /non-families\. of all|years\. of residents were under/) {
+$_ =~ s/ *… */ /g;
+$_ =~ s/e\.g\.|i\.e\.|et\. al\.//ig;
+$_ =~ s/ph\.?d\.?/phd/ig;
+$_ =~ s/psy\.?d\.?/psyd/ig;
+$_ =~ s/ll\.?([dbm])\.?/ll$1/ig;
+$_ =~ s/ed\.d\./edd/ig;
+$_ =~ s/uss\.r\./ussr/ig;
+$_ =~ s/usm\.c\./usmc/ig;
+$_ =~ s/ (Jr|Dr|Sr|Mrs?|Ms|Capt|Jnr|Snr|Col)\.,/ $1 /ig;
+$_ =~ s/ (?:ss\.cc|indet|esp|eq|cf||bc|ad|figs?)\./ /ig;
+$_ =~ s/((?<=[" ,;:])|^)(\w+)[.?!]([,;])\s++(?=([a-z]\S*[ ,]|$))/$1$2 /g;
+$_ =~ s/\.\.+/;/g;
+$_ =~ s/(?<=[ £[:punct:]])([0-9]{1,3}), (?=[0-9]{3}[ [:punct:]–])/$1,/g;
+$_ =~ s/([A-Z][a-zA-Z']*( [A-Z][a-zA-Z']*){2,})[?!]+/$1/g;
+$_ =~ s/ +/ /g;
+$_ =~ s/^\s+|\s+$//g;
+
+
+
+while (<$inp>) {
+    $_ =~ s/(\S+\.)(I[nt])/$1 $2/g;
+    $_ =~ s/[^{} |<>\"’”']+(\.[^{} |<>\"’”']+)*\.(com?|info|org|net|gov|edu|i[oent]|m[ed]|p[lhk]|l[yv]|a[iu]|s[ek]|e[us]|b[re]|r[uo]|n[ouzg]|d[ike]|c[zhna]|u[sak]|tv|jp|hu|gr|fi|kz|za)([.\/][^{} |<>\"’”']+)?'?s?($|(?=[.\/,;:'\"’” ]))/ /ig;
+    $_ =~ s/(Mrs|Mr|Ms|St|Dr|Jr|Rev|Prof|Gen|Ltd|Govt|Bros|Lt|Inc)\.(?=[\p{L}0-9])/$1 /g;
+    $_ =~ s/(n\.w\.a|ver\.di|run-d\.m\.c\.|(prosieben)?sat\.1|node\.js|apl\.de\.ap|bit\.trip|media\.vision|india\.arie|will\.i\.am)'?s?/ /ig;
+    $_ =~ s/(^|(?<=[\/,;:'\"’” ]))(alt|yandex)(\.[^{} \`|<>\"’”']+)+(?=[.\/,;:'\"’” ]|$)([.\/][^{} \`|<>\"’”']+)?'?s?/ /ig;
+    $_ =~ s/\.(A(l(though|so|l)|fter|s|nd?|t|ccording|mong)|B(oth|ut|y|efore)|Currently|D(eath|u(e|ring))|E(ach|very)|F(o(r|llowing)|rom)|H(er|is|owever|ave)|I([snf]|t('?s)?)|L(ife|ater)|M(ost|any|ore)|N(ew|ow)s?|O(ne|ther|ver)|People|S(he|ince|o(me)?)|T(oday|h(o(ugh|se)|at|rough))|Th[eiau][nyirst]?[re]?|Under|W(h(ile|en)|ith|e)|You)((?=[.',;:\"’” ])|$)/ $1/g;
+    $_ =~ s/(^|(?<=[\/,;:'\"’” ]))[\/–-]?No\.(?:s? ?[0-9–-]+[a-zA-Z]?| ?[XVICLxvicl])(?:,? (and |to |of |& )?[0-9–-]+[a-zA-Z]?)*((?=[.',;:\"’”])|$)/ /g;
+    $_ =~ s/(^|(?<=[\/,;:'\"’” ]))[\/–-]?((DH|Re|M[SB]|PZL|CR|SR)\.(number )?[0-9]+[A-Z]*([.\/][A-Z0-9])?|Mk\.[XCLIVxcliv]+[a-z]?|Bus\.(\/US [0-9]+)?\/SR [0-9]+|[XIV]{2,}\.(\/|[0-9]+))'?s?((?=[.',;:\"’”])|$)/ /g;
+    $_ =~ s/\s*(,\s+)+/, /g;
+    $_ =~ s/\s*(;\s+)+/; /g;
+    $_ =~ s/\s*(\.\s+)+/. /g;
+    $_ =~ s/\s+/ /g;
+    print $oup "$_\n";
+}
+
+
+sed -E '/^\s*\[\[\s*(file|image|category)\s*:[^][]+\]\]\s*$/Id' pwiki0  |\
+sed -E 's/^(AWKRECORDBREAK|==+[^=]+==+$)/ /g' |\
+sed -E 's/^\s*\{\{\s*(R +|use *[dm][dm]y|further|more\s*cit|afc|main|redirect|expand|redirect|see\s*also|ref *(begin|end)|clear)[^}{]*\}\}//Ig' |\
+sed -E 's/"preserve">/&\n/Ig'  |\
+sed -E '/^\s*(#redirect|<[^>]+>)/Id' |\
+sed -E "s/''+//g"  |\
+sed -E 's/<\s*\/?\s*br\s*\/?\s*>/ /g' |\
+sed -E 's/(\{\{|&)amp(\}\}|;)/\&/Ig'  |\
+sed -E 's/(\{\{|&)quot(\}\}|;)/"/Ig'  |\
+sed -E "s/(\{\{|&)apos(\}\}|;)/'/Ig"  |\
+sed -E 's/(\{\{|&)(spaced *)?(e?[mn]*) *(bsp|dash)(\|[0-9]+)?(\}\}|;)/ /Ig'  |\
+sed -E 's/&lt;/</Ig' |\
+sed -E 's/&gt;/>/Ig' |\
+sed -E 's/☛|☚|⚆|⚈|⚇|⚉|⛀|⛂|⛁|⛃|⛋|⛝|⚞|⚟|☝|☟|⚬|⚭|⚮|⚯|⚻|⚺/ /g' |\
+sed -E '/^\s*$/Id' > twiki1
+
+
+
+sed -E 's/<\!--/☛/g'  twiki1 |\
+sed -E 's/-->/☚/g'  |\
+sed -E 's/< *ref[^<>]+\/ *>/ /Ig' |\
+sed -E 's/< *ref *((name|group) *=[^<>]*)?>/⚟/Ig' |\
+sed -E 's/< *\/ *ref *>/⚞/Ig' | \
+sed -E 's/<\s**nowiki\s*>/⛀/Ig' |\
+sed -E 's/<\s*\/\s*nowiki\s*>/⛂/Ig' |\
+sed -E 's/<(math( chem)?|code|chem|pre|syntaxhighlight)([a-z ]+=[^<>]+)?>/⛁/Ig' |\
+sed -E 's/<\/(math( chem)?|code|chem|pre|syntaxhighlight)>/⛃/Ig' > twiki2
+
+
+
+sed -E 's/(< *([–\!—-] *)+|☛)[^☛☚<>]*( *( *[–\!—-])+ *>|☚)/ /g' twiki2 |\
+sed -E 's/⛀[^⛀⛂]*[☛☚⚆⚈⚇⚉⛀⛂⛁⛃⛋⛝⚞⚟☝☟⚬⚭⚮⚯⚻⚺][^⛂⛀]*⛂/ /g' |\
+sed -E 's/⚟[^⚟⚞]*⚞/ /g' |\
+sed -E 's/⛁[^⛃⛁]*⛃/ /g' |\
+sed -E 's/⛀[^⛀⛂]*[☛☚⚆⚈⚇⚉⛀⛂⛁⛃⛋⛝⚞⚟☝☟⚬⚭⚮⚯⚻⚺][^⛂⛀]*⛂/ /g' |\
+sed -E 's/⚟[^⚟⚞]*⚞/ /g' |\
+sed -E 's/⛁[^⛃⛁]*⛃/ /g' |\
+sed -E 's/⛀([[:punct:]])⛂/\1/g' |\
+sed -E '/^\s*$/d' > twiki3
+
+
+sed -E 's/< *\/? *(only|no)\s*include *>/ /Ig'
+
+☛☚⚆⚈⚇⚉⛀⛂⛁⛃⛋⛝⚞⚟☝☟⚬⚭⚮⚯⚻⚺
+
+
+grep -P "(?<!\{)\{\||\|\}(?!\})"
+perl -pe 's/(?<!\{)\{\|/⚆/g'
+perl -pe 's/\|\}(?!\})/⚈/g'
+
+Remove Tags
+R |ns|yel|flag(icon( image)?|country)|sfn|goal|lang|convert|color box|mvar
+player|jct|r\||pengoal|space|start date|rut |medal|country data|efn\| *name *=[^{}|]|legend
+To speed up bracket collapse for table endpoint identification
+
+sed -E 's/\{\{(player|jct|r\||pengoal|space|start date|rut |medal|country data|efn\| *name *=[^{}|]|)[^{}]*\}\}/ /g'
+(https?|smtp|t?ftp|pop|dns|nfs|mine|ldap|ntp|rpc|smb|snm[tp]|pop3):
+
+sed -E '/^[:., -]*$/d'
+sed -E 's/⚬|⚭|⚮|⚯/ /g'
+sed -E 's/<\s*(block *quote|poem)[^<>]*>/⚬/Ig'
+sed -E 's/<\s*\/\s*(block *quote|poem)[^<>]*>/⚭/Ig'
+sed -E -i 's/⚬([^⚬⚭]*)⚭/ \1 /g' twiki12
+sed -E 's/<\s*gallery[^<>]*>/⚮/Ig'
+sed -E 's/<\s*\/\s*gallery[^<>]*>/⚯/Ig'
+
+
+collapse3.pl twiki11 twiki12
+sed -E '/^[:., -]*$/d' twiki12 |\
+sed -E 's/⚬|⚭|⚮|⚯/ /g' |\
+sed -E 's/<\s*(block *quote|poem)[^<>]*>/⚬/Ig' |\
+sed -E 's/<\s*\/\s*(block *quote|poem)[^<>]*>/⚭/Ig' |\
+sed -E 's/⚬([^⚬⚭]*)⚭/ \1 /g' > twiki13
+collapse0.pl twiki12 twiki13
+
+
+sed -E 's/<\s*gallery[^<>]*>/⚮/Ig' twiki13 |
+sed -E 's/<\s*\/\s*gallery[^<>]*>/⚯/Ig'
+sed -E 's/<\s*(image\s*map|map\s*frame|source|timeline|score|ol|ul|table|graph)[^<>]*>/⚻/Ig'
+sed -E 's/<\s*\/\s*(image\s*map|map\s*frame|source|timeline|score|ol|ul|table|graph)[^<>]*>/⚺/Ig'
+
+
+sed -E 's/<\s*(image\s*map|map\s*frame|source|timeline|score|ol|ul|table|graph)[^<>]*\/>/ /Ig' twiki14 |\
+sed -E 's/<\s*(image\s*map|map\s*frame|source|timeline|score|ol|ul|table|graph)[^<>]*>/ ⚻ /Ig' |\
+sed -E 's/<\s*\/\s*(image\s*map|map\s*frame|source|timeline|score|ol|ul|table|graph)[^<>]*>/ ⚺ /Ig' |\
+sed -E 's/⚻[^⚻⚺]*⚺/  /g' |\
+sed -E 's/⚻[^⚻⚺]*⚺/  /g' |\
+sed -E 's/<\s*(small|big)[^<>]*>/ ⚻ /Ig' |\
+sed -E 's/<\s*\/\s*(small|big)[^<>]*>/ ⚺ /Ig' |\
+sed -E 's/⚻([^⚻⚺]*)⚺/ \1 /g'
+
+
+"\{\{([^{}|]*\s+)?\s*()((\||\s+)[^{}|]*[^{}]*)?\}\}"
+"\{\{[^{}|]*(begin|end)[^{}|]*(\|[^{}|]*)*\}\}"
+
+sed -E 's/\{\{\s*nowrap\s*(begin|end)\s*\}\}/ /Ig' twiki16 | 
+sed -E 's/\{\{([^{}|]*\s+)?((div|col)(-\S+|end|begin)?|shipwreck|starbox|(end|start) date|(cfb|cbb) yearly|judge succession|canmp|orbitbox|ontmpp|glossary|qcmna|hidden|go to top|end of han|[a-z-]+mla|skip to|monetary policy|#section:\S+|displaytitle\S+|:\S+|left header|no footer|year[^{}|]*header)((\||\s+)[^{}|]*[^{}]*)?\}\}/ /Ig' |
+perl -pe 's/\{\{\s*(end[^{}|]*|[^{}|]*(?<!leg)end[0-9]*\s*)(\|[^{}]*)*\}\}/⚈/gi' |\
+perl -pe 's/\{\{[^{}|]*begin[^{}|]*(\|[^{}]*)*\}\}/⚆/gi' |
+perl -pe 's/\{\{[^{}|]*start(?!rek|ing)[^{}|]*(\|[^{}]*)*\}\}/⚆/gi' |\
+perl -pe 's/\{\{[^{}|]*(\/|table|list)\s*top[^{}|]*(\|[^{}]*)*\}\}/⚆/gi' |\
+perl -pe 's/\{\{[^{}|]*(?<!(navigational box|split|vert(ical)?|program|chembox|ship)\s{1,2}|bio|(post|navbar|chset-table)\-|sub|maiden|primary|secondary|\|core\|)head *(?=\||\}|er)[^{}|]*(\|[^{}]*)*\}\}/⚆/gi' |\
+perl -pe 's/\{\{[^{}|]*bottom[^{}|]*(\|[^{}]*)*\}\}/⚈/gi' |\
+perl -pe 's/\{\{[^{}|]*(?<!(nihongo|[_ ]rs|dnb|index){1,3}|note)foot\s*(?=er|\||\})[^{}|]*(\|[^{}]*)*\}\}/⚈/gi' |
+sed -E 's/\{\{[^{}|]*(golf18|tree\s*list|tls-h2)[^{}|]*[^{}]*\}\}/⚆/Ig' |
+sed -E 's/\{\{[^{}|]*(election|awards?|peeryear|nobility|office-|species|post *code|lengths|monarch|genera|alternating)[^{}|]*table[^{}|]*(\|[^{}]*)*\}\}/⚆/Ig' |
+sed -E 's/\{\{[^{}|]*tableau[^{}|]*communes[^{}|]*(\|[^{}]*)*\}\}/⚆/Ig' |
+sed -E 's/\{\{[^{}|]*(defaultsort|divcolend|colstart)[^{}|]*[^{}]*\}\}/ /Ig' |
+sed -E  's/⚆([^⚆⚈]*)⚈/ \1 /g' > twiki17
+
+
+
+grep -Eio "\{\{[^{}|]*(begin|end|start|stop|bottom|top|header|footer)[^{}|]*(\|[^{}]*)*\}\}" twiki17
+
+
+s/(?<!\[)\[([^][]*)\](?!\])/$1/g
+s/(?<!\[)\[([^][]*)\]/$1/g
+s/\[([^][]*)\](?!\])/$1/g
+
+s/\{\{\s*as[_ -]*of(\|[^{}|]+)*\|([^{}|]*)\}\}/$2/ig;
+s/\{\{\s*as[_ -]*of(\|[^{}|]+)*\|([^{}|]*)\}\}/$2/ig;
+\{\{\s*as[_ -]*of\s*\|[^{}]*\|([^{}|]*)\}\}
+
+\|[^{}|]*(?:\{\{[^{}]*\}\}[^{}|]*)?
+
+($_ =~ /\{\{\s*X\s*\|/i)
+($_ =~ /\|\s*X\s*=/)
+$_ =~ s/\{\{\s*X\s*\|[^{}]*X\s*=([^{}|]*)[^{}]*\}\}/ $1 /gi;
+$_ =~ s/\{\{\s*X\}\}/ X /gi;
+
+group 1
+(?:
+allcaps?|big|block[_ -]*indent|(?:angle[_ -]*)?bracket|c\.|center|char|as\s*of|currency|
+em|illm?|interlanguage[_ -]*link|link\s*text|large|lit(?:\.|erally)?|music|nihongo|
+not[_ -]*a[_ -]*typo|hat[_ -]*note|note[_ -]*tag|trans(?:lation)?|#tag:ref|
+no[_ -]*(?:wr(?:ap)?|br(?:eak)?|italics?|bold)|(?:r|d)?efn(?:-[a-z]+)?|rws|stn|samp|sc2?|
+sm(?:all)?(?:caps|er)?|(?:simple)?nuclide|subatomic[_ -]*particle|sub|sup|tdes|term|
+visible[_ -]*anchor|sic|wikt\S*|underline|timeline[_ -]*event|us\\$|tag|font|mono|var|ship|"|
+(?:block|[a-z]|box|poem|(?:centered|reduced)?\s*pull)?\s*quot(?:e|e[_ -]*(?:box|frame)|ation)
+)
+
+group 2
+abbr(eviation|v|link)|cnote||H:title|resize|tooltip|transl|(verse[_ -]*)?transl(ation)?|
+wikt[_ -]*lang|(font[_ -]*)?color|currency|sclass
+
+
+(content|text|term|defn|ul?|alt|event|lit|note|code|math[_ -]*statement)[0-9]
+(extra|footer|translation|caption|description|ps)[0-9]
+1/2|•|·|co2|pi|0|e|*|3/4|--
+f/|,|"'"|'|'"|'-|-'|-"|"-|’|'ll|'d|'t|'ve|'re|'m|'s|!+
+
+\{\{[^{}|]*\|[^{}]*(\{(?>[^{}]+|(?1))*\}[^{}]*)*\}\}
+\[\[[^][]*(\[(?>[^][]+|(?1))*\][^][]*)*\]\]
+
+\{\{ *((block|[a-z]|poem|(centered|reduced)?\s*pull)? *quot(e|e *box|ation)|(#tag:)?(r|d)?efn?|notetag)[^}{|]*\|([^}{|]*)\}\}
+\{\{\s*(ubl|(plain|flat|h|unbulleted|columns-|collapsible) *list)[^}{]+\}\}
+
+<\s*\/?\s*(su[pb]|(span|div|dfn)(\s*(style|class)=)?|[usipb]|(em|tt|td|tr|dt|li|hr|h2)|strong|ref\s*name|include\s*only|section\s*(begin|end)|references|cite|name|samp|ins|\.\.\.|time|abbr|kbd|center|nowiki|)[^<>]*\s*\/?\s*>
+<\s*\/?\s*(su[pb]|(span|div|dfn)(\s*(style|class)=)?|[usipb]|(em|tt|td|tr|dt|li|hr|h2)|strong|
+ref\s*name|include\s*only|section\s*(begin|end)|references|cite|name|samp|ins|\.\.\.|
+time|abbr|kbd|center|nowiki|)[^<>]*\s*\/?\s*>
+
+(<\s*\/?\s*(?:su[pb]|(?:span|div|dfn)(?:\s*(?:style|class)=)?|[usipb]|(?:em|tt|td|tr|dt|li|hr|h2)|strong|ref\s*name|include\s*only|section\s*(?:begin|end)|references?|cite|name|samp|ins|\\.\\.\\.|time|abbr|kbd|center|nowiki)[^<>]*\/?\s*>)([ts]?ftp|https?):\/\/[^][{}⛀⛂ ,|\"'<>]*
+($_ =~ s/(s/<\s*\/?\s*(su[pb]|(span|div|dfn)(\s*(style|class)=)?|[usipb]|(em|tt|td|tr|dt|li|hr|h2)|strong|ref\s*name|include\s*only|section\s*(begin|end)|references|cite|    name|samp|ins|\.\.\.|time|abbr|kbd|center|nowiki)[^<>]*\s*\/?\s*>)//g)
+
+s/U\.S\./US/g
+s/U\.K\./UK/g
+([a-z]+\.){2,}([a-z]+)?(?=[[:punct:]]|\s)
+\S*[0-9]+(\.[0-9]+[^,. |]*)+
+s/\.\.\.+(?=\s{0,10}[A-Z])/. /g
+s/\.\.\.+//g
+(?<=\s)[A-Z]\.(?=[,. ])
+
+perl -pe 's/\(\s*(?:[iea]\.?\s*[gek]\s*(?:\.\s*a)?|lit|esp)\.[ ,:]([^()]*)\)/ $1 /ig' twiki24o | 
+perl -pe 's/\([a-z](\.?[a-z])?\.\s[^()]*\)/ /ig'  |
+perl -pe 's/\([^()]*(?<=[( ])p+(?=[., -](?=[ )0-9]))[^()]*\)/ /g' | 
+perl -pe 's/\([^()]*[0-9]+:[0-9]+[^()]*\)/ /g' | 
+perl -pe 's/\([^()]{0,9}\.[^()]{0,9}\)/ /g' | 
+perl -pe 's/\([^()]{0,6}(?<![a-z])[a-z]{1,3}\.[^()]{0,6}\)/ /g' | 
+perl -pe 's/\([^()]*(?<=[( ,-])(cit|vol|ed|num|ch|c|et al)\.\s[^()]*\)/ /ig'
+perl -pe 's/\([^()]*(?<=\s)[xcliv]{2,}\.\s[^()]*\)/ /g'
+s/\(([^()]{1,3})\)/$1/g
+s/\(([^()]*)\)/$1/g
+
+s/\s*,\s+(,\s+)+/, /g
+\([^()]*\.[^()]*\)
+\([^()]*(?<=\s|\()(ff|pl|p+|chs?|loc|et al|vol(?:s|ume)?|fig|ed|no?\.|cit|dist|[ivx]{2,}\.)\.?\s+[^()]*\)
+\([-%0-9 –.,×<>_=/#]+\)
+s/\(([^()]*)(?<=\s|\()(?:[iea]\.?\s*[gek]\s*(?:\.\s*a)?|lit|esp)\.[ ,:]([^()]*)\)/ $1 $2 /ig
+
+
+grep -Po '\([^()]*\.\s[^()]*\)' |
+\s+e\s*\.?g\s*\.?\s+
+\s+i\s*\.?e\s*\.?\s+
+
+(\s*[A-Z][^ .,;:]+\s*){2,10}
+(\s*[A-Z][^ .,;:]+\s*){2,}
+
+([djsm]r|mrs|ms|sen|gov|rep|rev|hon|inc|bros|co|ltd)
+ft|pvt|sgt|lt|maj|col|gen|st|ave|rd
+([mkc]?(m|hz|g|s)|mi|in|lbs?|avg|sq|rpm)
+([ap]m)|mon|tue|wed|thu|fri|sat|sun
+(jan|feb|mar|apr|jun|jul|aug|sep|oct|nov|dec)
+(N[or]s?|vs?|mk|etc|lit|viz|app|spp?|var|ca|Op|[a-z])
+(ph|va|mt|ma|fr)
+
+
+
+Titles
+Dr.	Jr.	Sr.	Mr.	Ms.	Mrs.	sen.	gov.	Rep.	Rev.	Hon.
+Inc.	Bros.	Co.	Ltd.
+Roads
+St.	Ave.	Rd.
+Military
+Ft.	Pvt.	Sgt.	Lt.	Maj.	Col.	Gen.
+Measurements
+kg.	mhz.	khz.	s.	km.	cm.	mm.	m.	Bar.
+in.	ft.	lbs.
+avg.	sq.	rpm.
+Days
+am. pm. Mon. Tue. Wed. Thu. Fri. Sat. Sun.
+Months
+Jan. Feb. Mar. Apr. Jun. Jul. Aug. Sep. Oct. Nov. Dec.
+Locations
+Va.	Ph.	It.	Ma.	Mt.	Fr.
+pp.	p+.	Ch.	et al.	Vols?.	ed.	cit.	cf	dist
+
+
+s/\s+e\.?\s*g\.?\s+/ /ig
+s/\s+i\.?\s*e\.?\s+/ /ig
+s/\s+et\s*al\.?\s+/ /ig
+
+
+(jan|feb|mar|apr|jun|jul|aug|sep|oct|nov|dec|([ap]m)|mon|tue|wed|thu|fri|sat|sun|[mkc]?(m|hz|g|s)|in|lbs?|avg|sq|rpm|ft|pvt|sgt|lt|maj|col|gen|st|ave|rd|N[or]s?|vs?|mk|etc|lit|viz|app|spp?|var|ca|Op|[a-z]|[VPIMF][ahtar]|[djsm]r|mrs|ms|sen|gov|rep|rev|hon|inc|bros|co|ltd)
+
+
+perl -pe 's/(?<=[" ,;:]|^)(jan|feb|mar|apr|jun|jul|aug|sept|oct|nov|dec|mon|tue|wed|thu|fri|sat|sun|[djsm]r|mrs|ms|sen|gov|rep|rev|md|jd|hon|mt|ft|pvt|sgt|lt|maj|col|gen|fe|st|avg|sq|1st|2nd|3rd|[456789]th)\.\s++(?!([A-Z][a-z]+[ ,]|$))/ $1 /gi' 
+perl -pe 's/(?<=[" ,;:]|^)((?i)[ap]m|inc|bros|co|ltd|ave|r[td]|k?m\/[hs]|mph|[mkcμn]?(m|hz|g|s)|ha|plc|hp|mi|in|oz|lbs?|rpm)\.\s++(?!([A-Z][a-z]+[ ,]|$))/ $1 /gi' 
+perl -pe 's/(?<=[" ,;:]|^)(N[or]s?|vs?|mk|etc|rs|ste|lit|viz|app|spp?|var|ca|Op|rbis|p[tlp]?|ff|chs?|loc|et al|vols?|fig|ed|cit|dist|esq|sec|fl|smt|&c|[a-z]|ph|va|ma|fr)\.(?![a-z])/ /ig'
+
+perl -pe 's/(?<![a-z])no?\s*([0-9])/number $1/ig'
+perl -pe 's/(?<=\s|[",;:]|^)([a-z]\.)+[^ .]*/ /ig'
+
+
+\b(and|of|the|notes?|in|see|(?:pl|p+|ff|chs?|loc|et al|vol(?:s|ume)?|fig|ed|no?|cit|dist|[vixVIX]+(?:\.[vixVIX]+)*)\.?|[A-Z]\S*|[0-9&/, ;–:-])+\b
+((\bf?o[fr]\b|\band\b|\bthe\b|\bnotes?\b|\bin\b|\bper\b|\bsee\b|&|[0-9][^. ]*+|\s+[a-zA-Z]{1,2}\.\s+|\S+\.\S+|\b(?:[Cc]hs?|[Ll]oc|et al|[Vv]ol(?:s|ume)?|[Ff]ig|[Cc]it|[Dd]ist|[vix]+(?:\.[vix]+)?)\b\.?|\b[A-Z][^. ]*+)+\s*[/#",;–:-]*\s*) 
+((?<=[a-zA-Z]{1,2}|[Cc]hs?|[Ll]oc|et al|[Vv]ol(?:s|ume)?|[Ff]ig|[Cc]it|[Dd]ist|[vix]{2,5})[^.]*)+
+
+
+s/⚻[^⚺⚻]*⚺|⚟[^⚟⚞]*⚞|⚮[^⚮⚯]*⚯|⚬[^⚬⚭]*⚭|⚆[^⚆⚈]*⚈|☟[^☟☝]*☝|☛[^☛☚]*☚/ /g
+s/(\s*,\s*)+/, /g
+s/(\s*;\s*)+/; /g
+
+^\s*[][{}<>/`~–!*#%&☟☝☛☚⚟⚞⚆⚈=_+]
+[][{}()<>/`–*#☟☝☛☚⚟⚞⚆⚈=_+-]\s*$
+☛☚⛁⛃⛀⛂⚮⚯⚬⚭⚻⚺
+
+
+$_ =~ s/<[^<>]*\/\s*>/ /g;
+$_ =~ s/<\s*ref\s*[^<>]*>/⚟/g;
+$_ =~ s/<\s*\/\s*ref\s*[^<>]*>/⚞/g;
+$_ =~ s/(⚟|<\s*ref)[^⚟⚞]*(<\s*\/\s*ref([^<>]*>)?|⚞)/ /g;
+$_ =~ s/<\s*ref\s*name\s*=\s*"[^"]*"?\s*\/?/ /g;
+$_ =~ s/(\{\{|[☟⚟])[^|]*quote[^|]*\|/ /ig;
+$_ =~ s/(\{\{|[☟⚟]|<\s*ref)[^☟☝⚟⚞]*(<\s*\/\s*ref([^<>]*>)?|[⚞☝]|\}\})/ /ig;
+$_ =~ s/⚻[^⚺⚻]*⚺|⚟[^⚟⚞]*⚞|⚮[^⚮⚯]*⚯|⚬[^⚬⚭]*⚭|⚆[^⚆⚈]*⚈|☟[^☟☝]*☝|☛[^☛☚]*☚/ /g;
+$_ =~ s/(\s*,\s*)+/, /g;
+$_ =~ s/(\s*;\s*)+/; /g;
+
+
+
+((\s*(f?o[fr]|and|the|in|&)\s*)?(\s*[A-Z][^ .,;:"]+\s*))+
+(((?<![.!?])\s++|(?<="))[A-Z][^ .,;:"]+\s*)((\s*(f?o[fr]|and|the|in|&)\s*)*(\s*[A-Z][^ .,;:"]+\s*))+
+(((?<![.!?])\s+|")[A-Z][^ .,;:"]+\s*)((\s*(f?o[fr]|and|the|in|&)\s*)*(\s*[A-Z][^ .,;:"]+\s*))
+
+
+sed -E 's/⛀|⛂//g'
+sed -E 's/^.*<\s*\/\s*comment\s*>//Ig'
+sed -E '/\|/d'
+
+
+sed -E -i '/^\s*[][{}<>/`~–!*#%&☟☝☛☚⚟⚞⚆⚈=_+]|[][{}()<>/`–*#☟☝☛☚⚟⚞⚆⚈=_+-]\s*$/d' twiki26
+
+while (<$inp>) {
+    $_ =~ s/<[^<>]*\/\s*>/ /g;
+    $_ =~ s/<\s*ref\s*[^<>]*>/⚟/g;
+    $_ =~ s/<\s*\/\s*ref\s*[^<>]*>/⚞/g;
+    $_ =~ s/(⚟|<\s*ref)[^⚟⚞]*(<\s*\/\s*ref([^<>]*>)?|⚞)/ /g;
+    $_ =~ s/<\s*ref\s*name\s*=\s*"[^"]*"?\s*\/?/ /g;
+    $_ =~ s/(\{\{|[☟⚟])[^|]*quote[^|]*\|/ /ig;
+    $_ =~ s/(\{\{|\[\[|[☟⚟]|<\s*ref|ref\s*>)[^☟☝⚟⚞]*(<\s*\/\s*ref([^<>]*>)?|[⚞☝]|\}\}|\]\]|\/\s*ref\s*>)/ /ig;
+    $_ =~ s/⚻[^⚺⚻]*⚺|⚟[^⚟⚞]*⚞|⚮[^⚮⚯]*⚯|⚬[^⚬⚭]*⚭|⚆[^⚆⚈]*⚈|☟[^☟☝]*☝|☛[^☛☚]*☚/ /g;
+    $_ =~ s/(\s*,\s*)+/, /g;
+    $_ =~ s/(\s*;\s*)+/; /g;
+    print $oup $_;
+}
+
+
+
+sed -E 's/ref( name\s*=\s*[^<>\/]*)\s*\/\s*>/ /Ig' twiki26 |
+sed -E 's/\[\[([^☝])☝/ \1 /g' |
+sed -E 's/(\{\{|\[\[|[☟⚟]|<\s*.?ref|ref\s*(name\s*=\s*[^<>]*)?>)[^☟☝⚟⚞]*(<\s*\/\s*ref|[⚞☝]|\}\}|\]\]|\/\s*ref\s*>)/ /Ig' | 
+sed -E 's/\s+/ /g'
+
+grep -P '(?:[0-9]+([–-][0-9]+)?[,.;]? |[A-Z]\w*[,.;]? )*[A-Z]\w+\. (?:[,.;]? ?([xclivXCLIV]+|[0-9]+([–-][0-9]+|[a-z])?)(?=[[:punct:]]*( |$))){2,}(,? (and|&) [0-9]+)?' twiki26
+
+
+(?<=[.?\!]|^)\"? ?[A-Z0-9][^.\!?]+[.?\!]\"?(?= [A-Z0-9'\"]|\s*$)
+
+
+(?<=\p{P}| |^)
+(?<= \p{P}{0,3}|^)
+[][\/A-Za-z0-9?.,;:'–\!@#$%&*()_+=~-]+
+'?s?
+[\p{L}—–-]
+[\p{L}0-9\/:_$#=~+–-]+
+[^{} \`|<>\"’”']
+[\p{L}'\"_\/.,:*#$–0-9+=-]
+(?:(?=[.',;:\"’”]*\s)|\s*$)
+(?=[.',;:\"’”]*\s+\p{Ll})
+(?=[.',;:\"’”]*\s+\p{Lu})
+(?![\p{L}0-9])
+
+[A-Z][-–\p{L}.]+\.,
+[^.,; '\"’”]+(\.[^.,; '\"’”]+)+('s)?
+[\p{L}–$%#:0-9-]+([\/.–-][\p{L}]+)+\.,
+\p{L}+\.\p{Lu}\p{Ll}+((?=[.',;:\"’”]* )|$)('s)?
+[\p{L}0-9\/#$_–+=-]+(\.[\p{L}0-9\/#$_–+=-])+((?=[.',;:\"’”]* )|$)('s)?
+[][\/A-Z0-9?.,;:'–\!@#$%&*()_+=~-]+(\.[][\/A-Z0-9?.,;:'–\!@#$%&*()_+=~-]+)*\.
+(^|(?<=[\/,;:'\"’” ]| ))([.\/][][\/A-Z0-9?.,;:'–\!@#$%&*()_+=~-]+)?('s)?
+
+
+[^{} |<>\"’”']+
+[\/\p{L}0-9!?&@%#*_+:=~–-]+
+[\p{L}–-]+
+[\p{N}\p{P}]
+[\p{L}0-9\/:_$#=~+–-]+
+\p{Lu}[\p{Ll}–-]+
+(\.[\p{L}0-9\/:_$#=~+–-]+)+
+
+(?<= \p{P}{0,3}|^)
+(?<=\p{P}| |^)
+(?:^(?<=[\p{N}\p{P}]| ))
+(?!\p{P}*\s+\p{Lu}\p{Ll}*\b|\p{P}*\s*$)
+(?=\p{P}*\s+\p{Ll})
+(?=\p{P}*\s)
+
+
+(?<=([.?!]|^)\s{1,3})
+(?<=^| \p{P}{0,2})
+
+
+(?<=([.?!]|^)\s{0,3})\.[^?!.]+[.?!]
+(\p{Lu}\p{Ll}+ ){2,}
+
+☛☚⚆⚈⚇⚉⛀⛂⛁⛃⛋⛝⚞⚟☝☟⚬⚭⚮⚯⚻⚺
+
+grep -Po "(?<=^|^[\"“”'‘ʼ]|[.?\!] |[.?\!][\"“”'‘ʼ] |[.?\!][\"“”'‘ʼ][\"“”'‘ʼ] )[\"“”‘'ʼ]*+[\p{Lu}0-9][^.?\!]+[?\!.][\"“”‘'ʼ]*+" twiki30
+
+sed -E 's/(\S+)[-‐‒–—―] (to|and|or) (\S+-)(\S+)/\1-\4 \2 \3\4/g'
+
+
+s/(\S+\.)(I[nt])/\1 \2/g
+[^{} \`|<>\"’”']+(\.[^{} \`|<>\"’”']+)*\.
+(com?|info|org|net|gov|edu|i[oent]|m[ed]|p[lhk]|l[yv]|a[iu]|s[ek]|
+e[us]|b[re]|r[uo]|n[ouzg]|d[ike]|c[zhna]|u[sak]|tv|jp|hu|gr|fi|kz|za)
+(?=[.\/,;:'\"’” ]|$)
+([.\/][^{} \`|<>\"’”']+)?('s)?
+[\/,;:'\"’” ]
+
+
+A(l(though|so|l)|fter|s|nd?|t|ccording|mong)|B(oth|ut|y|efore)|Currently|D(eath|u(e|ring))|
+E(ach|very)|F(o(r|llowing)|rom)|H(er|is|owever|ave)|I([snf]|t('?s)?)|L(ife|ater)|
+M(ost|any|ore)|N(ew|ow)s?|O(ne|ther|ver)|People|S(he|ince|o(me)?)|
+T(oday|h(o(ugh|se)|at|rough))|Th[eiau][nyirst]?[re]?|Under|W(h(ile|en)|ith|e)|You
+
+
+s/(n\.w\.a|ver\.di|run-d\.m\.c\.|(prosieben)?sat\.1|node\.js|apl\.de\.ap|bit\.trip|media\.vision|india\.arie|will\.i\.am)('s)?//ig' twiki28
+s/(?<=[\/,;:'\"’” ]|^)(alt|yandex)(\.[^{} \`|<>\"’”']+)+(?=[.\/,;:'\"’” ]|$)([.\/][^{} \`|<>\"’”']+)?'?s?//g'
+
+s/(?<=[\p{L}0-9]\.)
+(A(l(though|so|l)|fter|s|nd?|t|ccording|mong)|B(oth|ut|y|efore)|Currently|D(eath|u(e|ring))|E(ach|very)|
+F(o(r|llowing)|rom)|H(er|is|owever|ave)|I([snf]|t('?s)?)|L(ife|ater)|M(ost|any|ore)|N(ew|ow)s?|O(ne|ther|ver)|
+People|S(he|ince|o(me)?)|T(oday|h(o(ugh|se)|at|rough))|Th[eiau][nyirst]?[re]?|Under|W(h(ile|en)|ith|e)|You)
+(?=[.',;:\"’”]*( |$))/ $1/g
+
+s/(?<=^|[\/,;:'\"’” ])(\S*[\/–-])?No\.
+(?:s? ?[0-9–-]+[a-zA-Z]?| ?[XVICLxvicl])
+(?:,? (and |to |of |& )?[0-9–-]+[a-zA-Z]?)*
+(?=[.',;:\"’”]*( |$))//g
+
+s/(?<=^|[\/,;:'\"’” ])(\S*[\/–-])?(
+(DH|Re|M[SB]|PZL|CR|SR)\.
+(number )?[0-9]+[A-Z]*([.\/][A-Z0-9])?|
+Mk\.[XCLIVxcliv]+[a-z]?|Bus\.
+(\/US [0-9]+)?\/SR [0-9]+|
+[XIV]{2,}\.(\/|[0-9]+))
+'?s?(?=[.',;:\"’”]*( |$))//g
+
+s/(Mrs|Mr|Ms|St|Dr|Jr|Rev|Prof|Gen|Ltd|Govt|Bros|Lt|Inc)\.(?=[\p{L}0-9])/$1 /g
+s/(\S+\.)(I[nt])/$1 $2/g
+s/[^{} |<>\"’”']+(\.[^{} |<>\"’”']+)*\.
+(com?|info|org|net|gov|edu|i[oent]|m[ed]|p[lhk]|l[yv]|a[iu]|s[ek]|
+e[us]|b[re]|r[uo]|n[ouzg]|d[ike]|c[zhna]|u[sak]|tv|jp|hu|gr|fi|kz|za)
+([.\/][^{} |<>\"’”']+)?'s?($|(?=[.\/,;:'\"’” ]))//ig
+
+
+/zone\.tab/d
+s/(?<=\p{P}| |^)Th\.\s*([BMD]\.?)?//g
+s/www(\.[\/\p{L}0-9!?&@%#*_+:=~–-]+)+—?//ig
+s/[^{} |<>\"’”']+(\.[^{} |<>\"’”']+)*\.nl([.\/][^{} |<>\"’”']+)?'?s?//ig;
+s/([\/\p{L}0-9!?&@%#*_+:=~–-]+\.)fm—?//ig
+s/(?<= [\p{N}\p{P}]{0,3}|^)([ap])\.?\s*m\.(?!\p{P}*\s+\p{Lu}\p{Ll}*\b|\p{P}*\s*$)/$1m/g
+s/(?<= [\p{N}\p{P}]{0,3}|^)([ap])\.\s*m(?=\p{P}*\s)/$1m/g
+s/(?<= [\p{N}\p{P}]{0,3}|^)sq\.?\s*([mf][ti]?)\.(?!\p{P}*\s+\p{Lu}\p{Ll}*\b|\p{P}*\s*$)/sq $1/ig
+s/(?<= [\p{N}\p{P}]{0,3}|^)sq\.\s*([mf][ti]?)(?=\p{P}*\s)/sq $1/ig
+s/([\p{L}–-]+\.)He /$1 He/g
+s/(?<= \p{P}{0,3}|^)(sc|pharm|litt)\.\s*D\.(?=\p{P}*\s+\p{Ll})/$1D/ig
+s/(?<= \p{P}{0,3}|^)(sc|pharm|litt)\.\s*D\/$1D/ig
+s/(Lt)\.[–-](\p{L}+)\./$1-$2/g
+s/(dr|cand|mag)\.\s*([\p{L}–-]+)\.(?=\p{P}*\s+\p{Ll})/$1 $2/ig
+s/(dr|cand|mag)\.\s*([\p{L}–-]+)/$1 $2/ig
+s/([SL]t)\./$1/g
+s/Sd\.Kfz\.(\s*[0-9\/]+)?'?s?//g
+s/(?<= \p{P}{0,3}|^)(FB|TR|NF|SM)(\.[\p{L}0-9\/#_\$–+=-]+)+//g
+
+$_ =~ s/(?<= \p{P}{0,3}|^)[0-9]{1,2}\.(\s*[a-hkqrn]?[a-h1-8x]?x?[a-h][1-8](=[kqbrn])?[+#?!]*|\s*[0O]\-[0O])+(?!\p{L})//g;
+$_ =~ s/(?<= \p{P}{0,3}|^)([XIV]+|[0-9]+)\.\s*\/\s*\p{Lu}[\p{L}0-9\/:_\$#=~+–-]+(\s+([XIV]+|[0-9]+))+(\.[\p{L}\p{N}]+)?(rd|th|st|nd|'?s)?//g;
+$_ =~ s/([\p{L}0-9\/:_\$#=~+–-]+\.)He/$1 He/g;
+$_ =~ s/Jr\.[-–\/ ]?Sr\./Jr Sr/ig;
+$_ =~ s/Virtus\.pro|CC\.NN\.|WildC\.A\.T\.s|Sta\.Lucia//ig;
+$_ =~ s/([\p{L}0-9\/:_\$#=~+–-]+\.)+(hs|txt|exe|sys)//ig;
+$_ =~ s/\.[-–\/:]/ /g;
+$_ =~ s/(?<= \p{P}{0,3}|^)(B|USC)\.A\.(?!\p{L})/$1A/g;
+$_ =~ s/(?<= \p{P}{0,3}|^)(NC|SP|USD)\.A(?![\p{L}0-9])/$1A/g;
+$_ =~ s/[\p{L}0-9\/:_\$#=~+–-]*[0-9]\.x[\p{L}0-9\/:_\$#=~+–-]*(\.[\p{L}0-9\/:_\$#=~+–-]+)*//g;
+$_ =~ s/(?<= \p{P}{0,3}|^)[\p{L}0-9\/:_\$#=~+–-]+(\.[\p{L}0-9\/:_\$#=~+–-]+)+\.?(?=\p{P}*\s+\p{Ll})//g;
+$_ =~ s/\.(?=\p{P}*\s+\p{Ll})//g;
+
+
+$_ =~ s/(?<=^| | \p{P}| \p{P}\p{P})[0-9]{1,2}\.(\s*[a-hkqrn]?[a-h1-8x]?x?[a-h][1-8](=[kqbrn])?[+#?!]*|\s*[0O]\-[0O])+(?!\p{L})//ig;
+$_ =~ s/(?<=^| | \p{P}| \p{P}\p{P})([XIV]+|[0-9]+)\.\s*\/\s*\p{Lu}[\p{L}0-9\/:_\$#=~+–-]+(\s+([XIV]+|[0-9]+))+(\.[\p{L}\p{N}]+)?(rd|th|st|nd|'?s)?//g;
+$_ =~ s/([\p{L}0-9\/:_\$#=~+–-]+\.)He/$1 He/g;
+$_ =~ s/Jr\.[-–\/ ]?Sr\./Jr Sr/ig;
+$_ =~ s/Virtus\.pro|CC\.NN\.|WildC\.A\.T\.s|Sta\.Lucia//ig;
+$_ =~ s/([\p{L}0-9\/:_\$#=~+–-]+\.)+(js|txt|exe|sys)//ig;
+$_ =~ s/\.[-–\/:]/ /g;
+$_ =~ s/(?<=^| | \p{P}| \p{P}\p{P})(B|USC)\.A\.(?!\p{L})/$1A/g;
+$_ =~ s/(?<=^| | \p{P}| \p{P}\p{P})(NC|SP|USD)\.A(?![\p{L}0-9])/$1A/g;
+$_ =~ s/[\p{L}0-9\/:_\$#=~+–-]*[0-9]\.x[\p{L}0-9\/:_\$#=~+–-]*(\.[\p{L}0-9\/:_\$#=~+–-]+)*//g;
+$_ =~ s/(?<=^| | \p{P}| \p{P}\p{P})[\p{L}0-9\/:_\$#=~+–-]+(\.[\p{L}0-9\/:_\$#=~+–-]+)+\.?(?=\p{P}*\s+\p{Ll})//g;
+$_ =~ s/[.?!](?=\p{P}*\s+\p{Ll})//g;
+
+
+sed -E 's/pre- (to|and|or) post([a-z]\S+)/pre-\2 \1 post-\2/Ig'
+sed -E 's/post- (to|and|or) pre([a-z]\S+)/post-\2 \1 pre-\2/Ig'
+sed -E 's/inter- (to|and|or) intra([a-z]\S+)/inter-\2 \1 intra-\2/Ig'
+sed -E 's/intra- (to|and|or) inter([a-z]\S+)/intra-\2 \1 inter-\2/Ig'
+sed -E 's/micro- (to|and|or) macro([a-z]\S+)/micro-\2 \1 macro-\2/Ig'
+sed -E 's/macro- (to|and|or) micro([a-z]\S+)/macro-\2 \1 micro-\2/Ig'
+sed -E 's/under- (to|and|or) over([a-z]\S+)/under-\2 \1 over-\2/Ig'
+sed -E 's/over- (to|and|or) under([a-z]\S+)/over-\2 \1 under-\2/Ig'
+sed -E 's/hypo- (to|and|or) hyper([a-z]\S+)/hypo-\2 \1 hyper-\2/Ig'
+sed -E 's/hyper- (to|and|or) hypo([a-z]\S+)/hyper-\2 \1 hypo-\2/Ig'
+sed -E 's/super- (to|and|or) sub([a-z]\S+)/super-\2 \1 sub-\2/Ig'
+sed -E 's/sub- (to|and|or) super([a-z]\S+)/sub-\2 \1 super-\2/Ig'
+sed -E 's/pro- (to|and|or) anti([a-z]\S+)/pro-\2 \1 anti-\2/Ig'
+sed -E 's/anti- (to|and|or) pro([a-z]\S+)/anti-\2 \1 pro-\2/Ig'
+
+
+$_ =~ s/([^ -]+)--+([^ -]+)/$1 $2/g;
+$_ =~ s/([^ -]+)-+(?=$| )/$1/g;
+$_ =~ s/(?<=^| )-+([^ -]+)/$1/g;
+$_ =~ s/([^ -]+)--+([^ -]+)/$1 $2/g;
+$_ =~ s/--+//g;
+$_ =~ s/'/SQUOTESPOT/g;
+$_ =~ s/-/HYPHENSPOT/ig;
+$_ =~ s/\p{P}|\p{S}/ /g;
+$_ =~ s/\S*\p{N}\S*//g;
+$_ =~ s/\S*[^\p{Latin}\p{Z}]\S*//g;
+$_ =~ s/SQUOTESPOT/'/g;
+$_ =~ s/HYPHENSPOT/-/g;
+$_ =~ s/(?<=^| )'+//g;
+$_ =~ s/'+(?=$| )//g;
+$_ =~ s/\s+/ /g;
+$_ =~ s/^\s|\s$//g;
+print $oup "$_\n";
+
+
+$_ =~ s/([^ -]+)--+([^ -]+)/$1 $2/g;
+$_ =~ s/([^ -]+)-+(?=$| )/$1/g;
+$_ =~ s/(?<=^| )-+([^ -]+)/$1/g;
+$_ =~ s/([^ -]+)--+([^ -]+)/$1 $2/g;
+$_ =~ s/--+//g;
+$_ =~ s/(?<=^| |\p{P})'+//g;
+$_ =~ s/'+(?=\p{P}| |$)//g;
+$_ =~ s/(?<=^| )(a|about|above|after|again|ain't|also|although|an|and|another|any|are|aren't|arent|as|at|barely|be|because|been|before|between|both|but|by|can|can't|cant|coudlnt|could|couldn't|could've|couldve|de|did|didn't|didnt|do|does|doesn't|doesnt|doing|don't|dont|during|each|eight|el|else|every|everybody|everybody's|everybodys|everyone|everyone's|everyones|five|for|four|from|gonna|gotta|had|hadn't|hadnt|has|hasn't|hasnt|have|haven't|havent|having|he|he'd|hed|he'll|her|here|here's|heres|hers|herself|he's|hes|him|himself|his|how|however|hows|i|i'd|if|i'll|i'm|im|in|into|is|isn't|isnt|it|it'd|itd|it'll|itll|it's|its|itself|i've|ive|kinda|la|let|let's|lets|me|my|myself|nine|non|nor|not|now|of|off|on|once|one|one's|ones|only|or|other|our|our's|ourselves|out|per|quite|seven|she|she'd|she'll|she's|shes|should|shouldn't|should've|since|six|slightly|so|some|somebody|somebody's|someone|someone's|something|something's|such|ten|than|that|that'd|that'll|thatll|that's|thats|the|their|theirs|them|themself|themselves|then|there|there's|theres|these|they|they'd|theyd|they'll|theyll|they're|theyre|they've|theyve|thing|things|this|those|though|three|through|thus|to|too|twice|two|until|upon|use|used|very|was|wasn't|wasnt|we|we'd|we'll|we're|were|we've|weve|what|what'd|whatd|what'll|whatll|what's|whats|when|whens|where|wheres|which|while|who|who'd|whod|who'll|wholl|who's|whos|why|will|with|won't|wont|would|wouldn't|wouldnt|would've|wouldve|you|you'd|youd|you'll|your|you're|youre|your's|yourself|yourselves|you's|you've|youve)(?= |$)//ig;
+$_ =~ s/(?<=^| )\S(?= |$)//g;
+$_ =~ s/^\s+|\s+$//g;
+$_ =~ s/\s+/ /g;
+
+
+$_ =~ s/(?<= )due to(?= )//ig;
+$_ =~ s/(?<= )following (day|week|month|year)(?= )//ig;
+$_ =~ s/(?<= )end of the year(?= )/end-of-the-year/ig;
+$_ =~ s/(?<= )of the year(?= )/of-the-year/ig;
+$_ =~ s/(?<= )no doubt(?= )/no-doubt/ig;
+$_ =~ s/(?<= )(new|school|last) years?(?= )/$1-year/ig;
+$_ =~ s/(?<= )each other(?= )/each-other/ig;
+$_ =~ s/(?<= )(all|first) time(?= )/$1-time/ig;
+$_ =~ s/(?<= )(took|take) over(?= )/take-over/ig;
+$_ =~ s/(?<= )(set(ting)|(grew|grow)|br(eak(ing)?|oken?)|buil(t|d(ing)?)|(given?g?|gave)|end) up(?= )/$1-up/ig;
+$_ =~ s/(?<= )((step(ed)?)|turn(ed)?|shoo?t|la(y|id)|shut) down(?= )/$1-down/ig;
+$_ =~ s/(?<= )known for(?= )/known-for/ig;
+$_ =~ s/(?<= )well known(?= )/well-known/ig;
+$_ =~ s/(?<= )(primary|elementary|middle|secondary|high|public|law|business|medical) school(?= )/$1-school/ig;
+$_ =~ s/(?<= )(carr(y(ing)?|ied)|spread(ing)|br(eak(ing)?|oken?)|turn(ing|ed|s)?|point(s|ing|ed)?|la(y|id)|drop(ped|ping)?|knock(ed|ing)?|f(ind(ing)?|ound)) out(?= )/$1-out/ig;
+$_ =~ s/(?<= )(took|take) part(?= )/$1-part/ig;
+
+
+((?<! start)|(?<! end))
+sed -E "s/ new year's eve / New-Year's-Eve /Ig"
+s/(?<! start| end) of the year / of-the-year /ig
+new year's eve
+
+
+Extend Paired Prefixes (Wiki Only)
+    $_ =~ s/pre- (to|and|or) post([a-z]\S+)/pre-$2 $1 post-$2/Ig;
+    $_ =~ s/post- (to|and|or) pre([a-z]\S+)/post-$2 $1 pre-$2/Ig;
+    $_ =~ s/inter- (to|and|or) intra([a-z]\S+)/inter-$2 $1 intra-$2/Ig;
+    $_ =~ s/intra- (to|and|or) inter([a-z]\S+)/intra-$2 $1 inter-$2/Ig;
+    $_ =~ s/micro- (to|and|or) macro([a-z]\S+)/micro-$2 $1 macro-$2/Ig;
+    $_ =~ s/macro- (to|and|or) micro([a-z]\S+)/macro-$2 $1 micro-$2/Ig;
+    $_ =~ s/under- (to|and|or) over([a-z]\S+)/under-$2 $1 over-$2/Ig;
+    $_ =~ s/over- (to|and|or) under([a-z]\S+)/over-$2 $1 under-$2/Ig;
+    $_ =~ s/hypo- (to|and|or) hyper([a-z]\S+)/hypo-$2 $1 hyper-$2/Ig;
+    $_ =~ s/hyper- (to|and|or) hypo([a-z]\S+)/hyper-$2 $1 hypo-$2/Ig;
+    $_ =~ s/super- (to|and|or) sub([a-z]\S+)/super-$2 $1 sub-$2/Ig;
+    $_ =~ s/sub- (to|and|or) super([a-z]\S+)/sub-$2 $1 super-$2/Ig;
+    $_ =~ s/pro- (to|and|or) anti([a-z]\S+)/pro-$2 $1 anti-$2/Ig;
+    $_ =~ s/anti- (to|and|or) pro([a-z]\S+)/anti-$2 $1 pro-$2/Ig;
+
+
+
+
+Overall Process
+
+(<= )(?= )
+Clean: Remove Numbers and Unnecssary Punctuation
+$_ =~ s/([^ -]+)--+([^ -]+)/$1 $2/g;
+$_ =~ s/([^ -]+)-+(?= )/$1/g;
+$_ =~ s/(?<= )-+([^ -]+)/$1/g;
+$_ =~ s/([^ -]+)--+([^ -]+)/$1 $2/g;
+$_ =~ s/--+//g;
+$_ =~ s/'/SQUOTESPOT/g;
+$_ =~ s/-/HYPHENSPOT/ig;
+$_ =~ s/\p{P}|\p{S}/ /g;
+$_ =~ s/\S*\p{N}\S*//g;
+$_ =~ s/\S*[^\p{Latin}\p{Z}]\S*//g;
+$_ =~ s/SQUOTESPOT/'/g;
+$_ =~ s/HYPHENSPOT/-/g;
+$_ =~ s/(?<= )'+//g;
+$_ =~ s/'+(?= )//g;
+
+
+Tokenize Known Entities
+sed -E 's/washington d\s*c(?= )/W-DC/Ig' |\
+sed -E 's/(the )?united states( of america)?/U-S/Ig' |\
+sed -E 's/(the )?united kingdom/U-K/Ig' |\
+sed -E 's/(the )?european union/E-U/Ig' |\
+sed -E 's/(the )?united nations/U-N/Ig' |\
+sed -E 's/(the )?united arab emirates/UAE/Ig' |\
+sed -E 's/world war (ii|two)\b/World-War/Ig' |\
+sed -E 's/world war (i|one)\b/World-War/Ig' |\
+sed -E 's/new york city/NYC/Ig' |\
+sed -E 's/new (zealand|york|delhi|jersey|orleans|england|mexico|guinea|hampshire|brunswick)/New-\1/Ig' |\
+sed -E 's/los angeles/L-A/Ig' |\
+sed -E 's/san francisco/S-F/Ig' |\
+sed -E 's/hong kong/H-K/Ig' |\
+sed -E 's/puerto rico/PT-RC/Ig' |\
+sed -E 's/ ussr | unions? of soviet socialist republics? | soviet (russia|union) | russian federation / Russia /Ig' |\
+sed -E "s/ prc | people'?s republic of china / China /Ig" 
+sed -E 's/jp ?morgan chase/JP-Morgan-Chase/Ig'
+sed -E 's/bank of america/Bank-of-America/Ig'
+sed -E 's/Wells Fargo/Wells-Fargo/Ig'
+sed -E 's/goldman sachs/Goldman-Sachs/Ig'
+sed -E 's/morgan stanley/Morgan-Stanley/Ig'
+sed -E 's/charles schwab( corporation)?/Charles-Schwab/Ig'
+
+
+Tokenize Entities/Preserve Stop Words
+sed -E 's/ wells / -well- /Ig' |\
+sed -E 's/ (tin|aluminum|drink|beverage|a) can / \1 -can- /Ig' |\
+sed -E 's/ (flow|passage|amount|perception|unit) of time / \1 of -time- /Ig' |\
+sed -E 's/ time (dilation|travel|perception|standard|measurement|keep(ing|er)|management) / -time- \1 /Ig' |\
+sed -E 's/ (measure|space|keep|take|waste|save) time / \1 -time- /Ig' |\
+sed -E 's/ (a|last|free) will / \1 -will- /Ig' |\
+sed -E 's/ will (power|to) / -will- \1 /Ig' |\
+sed -E 's/ (first|second|third) place / -\1- place /Ig' |\
+sed -E 's/ finished (first|second|third) / finished -\1- /Ig' |\
+sed -E 's/ type (system|theory|design(ers)?|face|specimens?|fonts) / -type- \1 /Ig' |\
+sed -E 's/ (data|display|movable) type / \1 -type- /Ig' |\
+sed -E 's/ (replacement|spare|mechanical|mov(ing|able)) part / \1 -part- /g' |\
+sed -E 's/ (calendar|new|tropical|julian|astronomical|seasonal) year / \1 -year- /g' |\
+sed -E 's/ (all|brand|fresh|completely) new / \1 -new- /Ig' |\
+sed -E 's/ (primary|elementary|middle|secondary|high|public|law|business|medical) school / \1 -school- /Ig' |\
+sed -E 's/( (vertical(ly)?|elevat(ed|ion)|orient(ation|ed|ing)|located) .+) (up|down|over|under) (.+ (above|higher|below|lower|overhead|underneath|upward|downward) )/\1 -\6- \7/Ig' |\
+sed -E 's/( (above|higher|below|lower|overhead|underneath|upward|downward) .+) (up|down|over|under) (.+ (vertical(ly)?|elevat(ed|ion)|orient(ation|ed|ing)|located) )/\1 -\3- \4/Ig' |\
+sed -E 's/( (e(xit|nter)(ing|ed)?|box|contain(er|ing|s)|leav(e|ing)) .+) (in|out) (.+ (in(terior|side of|ward)|exterior|out(side of|ward)) )/\1 -\7- \8/Ig' |\
+sed -E 's/( (in(terior|side of|ward)|exterior|out(side of|ward)) .+) (in|out) (.+ (e(xit|nter)(ing|ed)?|box|contain(er|ing|s)|leav(e|ing)) )/\1 -\5- \6/Ig' |\
+sed -E 's/University of (\S+)/University-of-\1/Ig'
+sed -E "s/ new year's eve / New-Year's-Eve /Ig"
+perl -pe 's/(?<! start| end) of the year / of-the-year /ig'
+
+
+s/(?<= )((c|sh|w)ould|(sh|h|w)e|it?|th(at|e(re|y))|you|wh(at|o|y|e(n|re)))\x27\S+(?= )//ig
+s/(?<= )(a(bo(ut|ve)|fter|gain|in'?t|l(l|lso|though)|n(d|other'?s?|y)|re(n'?t)?|[st])?|b(e(cause|en|fore|ing|tween)?|oth|ut|y)|c(a(me|n'?t?)|o(me|ould(nt|ve)?))|d(e|id(n'?t)?|o(es(n'?t)?|ing|n'?t|wn)?|u(e|ring))|e(ach|ig(th|ht)|l(se)?|very((body|one)'?s?)?)|f(ew|i(fth|rst|ve)|o(r|ur(th)?)|rom)|h(a(d(n'?t)?|s(n'?t)?|v(e(n'?t)?|ing))|e(d|s|r(e'?s?(elf)?)?)?|i(m(self)?|s)|ow(ever|'?s)?)|i((m|ve)|[fm]|n(cluding|to)?|s(n'?t)?|t(d|ll|s(elf)?)?|ve)?|known|l(a(ter)?|e(ast|ss|t'?s?)?)|m(a(de|ny|y)|e|o(re|st)|y(self)?)|n(ew|in(e|th)|o(ne?|[rtw])?))(?= )//ig
+s/(?<= )(o(ff?|n(ce|e'?s?|ly)?|r|ther|u(r'?s?(elves)?|t)|ver)|p(art|er)|quite|s(ame|chool|e(cond|v(en(th)?|eral))|hes?|hould(ve|nt)?|i(nce|x(th)?)|lightly|o(me(body|one|thing)?'?s?)?|till|uch)|t(en(th)?|h(a(n|t(d|ll|s)?)|e(irs?|m(sel(f|ves))?|n|re(s|ll)?|se|y(d|ll|re|ve)?)?|i(ngs?|rd|s)|o(se|ugh)|r(ee|ough)|us)|ime|oo?|w(ice|o)|ype)|u(n(der|less|til)|p(on)?|s(ed?)?)|very|w(as(n'?t)?|e(re(n'?t)?|ll)?|h(at(d|ll|s)?|e(ns?|res?)|ich|ile|o(d|ll|s|ve)?|ys?)|i(ll|th(in)?)|o(n'?t|uld(ve|nt)?))|y(ear|ou((d|ll|s|ve)?|r(e|s(el(f|ves))?)?)))(?= )//ig
+s/'[ds](?= )//g
+s/(?<= )[XCLIV]+(?= )//g
+s/(?<= )\S(?= )//g
+
+$_ =~ s/(Xi|Chang|Qur)'an/$1an/ig;
+$_ =~ s/Shi'(i|a)/Shi$1/ig;
+$_ =~ s/Ba'ath/Baath/ig;
+$_ =~ s/d'Ivoire/dIvoire/ig;
+$_ =~ s/ d'[eé]tat/ détat/g;
+$_ =~ s/\S+ ibn \S+//g;
+$_ =~ s/\S+ bin \S+//g;
+$_ =~ s/ Ibn \S+//g;
+$_ =~ s/ (O'\S+|[ae][lst]-\S+|d'\S+)//ig;
+$_ =~ s/ al \S+//ig;
+$_ =~ s/\S+'ab //ig;
+$_ =~ s/sri lanka/Sri-Lanka/ig;
+$_ =~ s/ -(\S+)- / $1 /g;
+$_ =~ s/ (Admiral|President|Baron|Senator|Judge|MP|General|Colonel|Major|Captain|Lieutenant|Officer|Secretary|Pope|Father|Saint|Bishop|Lady|Emperor|Duke|Mrs|Ms|Miss|Mr|Major|Justice|Professor|Princess|Prince|St|Saint|Chief|Commissioner|Lord|Queen|King|Sir|[vV][ao]n|Dr)( \p{Lu}\S+)+/ $1 /g;
+$_ =~ s/ (John|William|George|James|David|Thomas|Robert|Charles|[Aa]l |Paul|Michael|Peter|Mary|Richard|Joseph|Louis|Martin|Edward|Mark|Bill|Jack|Scott|Victoria|Clark|Elizabeth|Frank|Alexander|Tom|Joe|Andrew|Mike|Maria|Daniel|Steve|Nicole|Bob|Jim|Lewis|Megan|Stephen|Harry|Tony|Albert|Earl|Walter|Don|Simon|Kim|Sam|Anne|Philip|Jean|Brian|Ben|Arthur|Patrick|Frederick|Samuel|Allen|Douglas|Ray|Anthony|Adam|Gordon|Juan|Rose|Margaret|Anna|Ryan|Max|Lawrence|Dean|Kim|Grant|Ray|Alan|Sarah|Jane|Eric|Kelly|Kevin|Ross|Roger|Dan|Carl|Bruce|Russel|Morgan|Kent|Donald|Alex|Brooklyn|José|Dave|Jimmy|Matt|Carter|Nick|Alfred|Christopher|Marshall|Tim|Norman|Billy|Johnny|Ann|Victor|Stanley|Jason|Alice|Charlie|Matthew|Andy|Marie|Benjamin|Jeff|Carlos|Mitchell|Roy|Gary|Nicholas|Muhammad|Gmina|Charlotte|Wayne|Fred|Karl|Ian|Barry|Barbara|Catherine|Jacob|Lloyd|Jonathan|Oliver|Dakota) (\p{Lu}\S+ )*/ /g;
+$_ =~ s/ (\p{Lu}\S+ )*(Li|Lloyd|Hudson|Turner|Evans|Cooper|Parker|Clinton|Baker|Warren|Harrison|Ward|Morris|Stanley|Bush|Anderson|Murray|Taylor|Lewis|Clark|Young|Marshall|Wright|Franklin|Nelson|Adams|Robinson|Washington|Smith|Lee|Brown|Johnson|Jones|Williams|Jackson|Francis|Davis|Hill|Hall|Fox|Khan|Miller|Simon|Stone|Ali|Lincoln|Gordon|Moore|Bell|Ford|Dean|Kim|Kennedy|Walker|Trump|Harris|Grant|Ray|Alan|Sarah|Jane|Singh|Jordan|Lane|Ross|Russel|Thompson|Morgan|Li|Kent|Wood||[Tt]he Great) / /g;
+$_ =~ s/( \p{Lu}\S+){6,}//g;
+$_ =~ s/\s+/ /g;
+$_ =~ /^( \S+){0,4} $/d;
